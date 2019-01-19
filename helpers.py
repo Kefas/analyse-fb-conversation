@@ -17,7 +17,7 @@ def parse_messages(messages_path: str) -> List[List[str]]:
 
     return lines
     
-def count_authors(parsed_conversation: np.ndarray) -> int:
+def count_authors(parsed_conversation: np.ndarray, exclude: List[str]) -> int:
     unique_authors = np.unique(parsed_conversation[:, 0])
-    filtered_authors = [x for x in list(unique_authors) if x != '']
+    filtered_authors = [x for x in list(unique_authors) if x not in exclude]
     return len(filtered_authors)
