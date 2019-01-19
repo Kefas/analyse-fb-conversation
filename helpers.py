@@ -1,6 +1,7 @@
 import json
 import codecs
 from typing import List
+import numpy as np
 
 def parse_messages(messages_path: str) -> List[List[str]]:
     with open(messages_path, encoding='utf-8') as f:
@@ -8,7 +9,7 @@ def parse_messages(messages_path: str) -> List[List[str]]:
     
     lines=[]
     for message in raw_conversation['messages']:
-        author = message['sender_name'].encode('latin1').decode('utf8')
+        author = message.get('sender_name', '').encode('latin1').decode('utf8')
         text = message.get('content', '').replace('\t', ' ').replace('\n', ' ').replace('\r', ' ').encode('latin1').decode('utf8') 
         time = message['timestamp_ms']
         msg_type = message['type']
@@ -16,3 +17,7 @@ def parse_messages(messages_path: str) -> List[List[str]]:
 
     return lines
     
+def count_authors(parsed_conversation: np.ndarray) -> int:
+    unique_authors = np.unique(parsed_conversation[:, 0])
+    filtered_authors = [x for x in list(unique_authors) if x != '']
+    return len(filtered_authors)
